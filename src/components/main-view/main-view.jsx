@@ -1,40 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MovieCard } from '../movie-card/movie-card.jsx';
 import { MovieView } from '../movie-view/movie-view.jsx';
 export const MainView = () => {
-  const [movies, setMovies] = useState([
-    {
-      id: 1,
-      title: 'The Avengers',
-      genre: 'Action',
-      director: 'Joss Whedon',
-    },
-    {
-      id: 2,
-      title: 'Avengers: Age of Ultron',
-      genre: 'Action',
-      director: 'Joss Whedon',
-    },
-    {
-      id: 3,
-      title: 'Avengers: Infinity War',
-      genre: 'Action',
-      director: 'Anthony Russo',
-    },
-    {
-      id: 4,
-      title: 'Avengers: Endgame',
-      genre: 'Action',
-      director: 'Anthony Russo',
-    },
-    {
-      id: 5,
-      title: 'Avengers: Secret Wars',
-      genre: 'Action',
-      director: 'Anthony Russo',
-    },
-  ]);
+  const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  useEffect(() => {
+    fetch('https://rocky-ravine-68908-c80297ae2b6b.herokuapp.com/movies')
+      .then((response) => response.json())
+      .then((data) => {
+        const moviesFromApi = data.map((movie) => {
+          return {
+            _id: movie._id,
+            Title: movie.Title,
+            Description: movie.Description,
+            Genre: {
+              Name: movie.Genre.Name,
+              Description: movie.Genre.Description,
+            },
+            Director: {
+              Name: movie.Director.Name,
+              Birth: movie.Director.Birth,
+            },
+          };
+        });
+        console.log('movies from api: ', data);
+        setMovies(moviesFromApi);
+      });
+  }, []);
   if (selectedMovie) {
     return (
       <MovieView
@@ -48,17 +40,15 @@ export const MainView = () => {
   } else {
     return (
       <div>
-
         {movies.map((movie) => (
           <MovieCard
-            key={movie.id}
+            key={movie.Title}
             movie={movie}
             onMovieClick={(newSelectedMovie) => {
               setSelectedMovie(newSelectedMovie);
             }}
           />
         ))}
-
       </div>
     );
   }
