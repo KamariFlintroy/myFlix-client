@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 export const LoginView = ({ onLoggedIn }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [Username, setUsername] = useState('');
+  const [Password, setPassword] = useState('');
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = {
-      Username: username,
-      Password: password,
+      Username,
+      Password
     };
     fetch('https://rocky-ravine-68908-c80297ae2b6b.herokuapp.com/login', {
       method: 'POST',
@@ -24,7 +26,7 @@ export const LoginView = ({ onLoggedIn }) => {
       .then((data) => {
         console.log('Login response: ', data);
         if (data.user) {
-          localStorage.setItem('user', JSON.stringify(data.user));
+          localStorage.setItem('user', JSON.stringify(data.users));
           localStorage.setItem('token', data.token);
           onLoggedIn(data.user, data.token);
         } else {
@@ -37,28 +39,31 @@ export const LoginView = ({ onLoggedIn }) => {
       });
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-      </label>
-
-      <label>
-        Password:
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </label>
-
-      <button type="submit">Submit </button>
-    </form>
+    <Form onSubmit={handleSubmit}>
+      <Form.Group controlId="formUsername">
+        <Form.Label>
+          Username:
+          <Form.Control
+            type="text"
+            value={Username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            minLength="5"
+          />
+        </Form.Label>
+      </Form.Group>
+      <Form.Group controlId="formPassword">
+        <Form.Label>
+          Password:
+          <Form.Control
+            type="Password"
+            value={Password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </Form.Label>
+      </Form.Group>
+      <Button variant='primary' type="submit">Submit </Button>
+    </Form>
   );
 };
