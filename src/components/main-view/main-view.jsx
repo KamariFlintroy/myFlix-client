@@ -6,6 +6,8 @@ import { MovieView } from '../movie-view/movie-view.jsx';
 import { LoginView } from '../login-view/login-view.jsx';
 import { SignupView } from '../signup-view/signup-view.jsx';
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import InputGroup from "react-bootstrap/InputGroup";
+import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -14,6 +16,7 @@ export const MainView = () => {
   // const [selectedMovie, setSelectedMovie] = useState(null);
   const storedUser = JSON.parse(localStorage.getItem('user'));
   const storedToken = localStorage.getItem('token');
+  const [Search, setSearch] = useState("");
   const [user, setUser] = useState(storedUser ? storedUser : null);
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const onLogout = () => {
@@ -138,13 +141,28 @@ export const MainView = () => {
                   <Col>The list is empty!</Col>
                 ) : (
                   <>
-                    {movies.map((movie) => (
-                      <Col className="mb-5" key={movie.id} md={3}>
-                        <MovieCard
-                          movie={movie}
-                        />
-                      </Col>
-                    ))}
+                          <Row className="search-bar">
+                            <form>
+                                <InputGroup>
+                                    <Form.Control
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    placeholder="Search"
+                                    aria-label="Search"
+                                    />
+                                </InputGroup>
+                            </form>
+                        </Row>
+                        {movies.filter((movie) =>
+                        movie.Title.toLowerCase().includes(Search.toLowerCase())).map((movie) => (
+                            <Col className="mb-4" key={movie._id} md={3}>
+                                <MovieCard
+                                movie={movie}
+                                token={token}
+                                user={user}
+                                setUser={setUser}
+                                />
+                            </Col>
+                        ))}
                   </>
                 )}
               </>
