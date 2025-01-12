@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { NavigationBar } from "../../navigation-bar/navigation-bar.jsx"
+import { NavigationBar } from "../navigation-bar/navigation-bar.jsx";
 import { ProfileView } from "../profile-view/profile-view.jsx";
 import { MovieCard } from '../movie-card/movie-card.jsx';
 import { MovieView } from '../movie-view/movie-view.jsx';
